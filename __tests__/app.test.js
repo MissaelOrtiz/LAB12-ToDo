@@ -100,5 +100,43 @@ describe('app routes', () => {
 
       expect(data.body).toEqual(expectation);
     });
+
+    test('updates specific todo for specific user', async() => {
+
+      const expectation = [
+        {
+          'id': 5,
+          'todo': 'thing2',
+          'completed': false,
+          'owner_id': 2
+        },
+        {
+          'id': 6,
+          'todo': 'thing3',
+          'completed': false,
+          'owner_id': 2
+        },
+        {
+          'id': 4,
+          'todo': 'thing',
+          'completed': true,
+          'owner_id': 2
+        }
+      ];
+
+      await fakeRequest(app)
+        .put('/api/todos/4')
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      const data = await fakeRequest(app)
+        .get('/api/todos')
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(expectation);
+    });
   });
 });
